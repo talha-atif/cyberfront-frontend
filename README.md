@@ -1,31 +1,49 @@
-npx create-react-app cyberfront-frontend
-cd cyberfront-frontend
+Setting Up Cyberfront Frontend
 
-npm install -D tailwindcss
-npx tailwindcss init
+This repository contains the frontend code for Cyberfront, built using React and Tailwind CSS.
+Installation
 
-Write this in tailwind.config.js
-/** @type {import('tailwindcss').Config} \*/
-module.exports = {
-content: [
-"./src/**/\*.{js,jsx,ts,tsx}",
-],
-theme: {
-extend: {},
-},
-plugins: [],
-}
+To get started, follow these steps:
 
-In index.css
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+Create React App
 
-npm install react-scripts@latest
-npm install axios
-npm install recharts
-npm install react-router-dom
-npm install react-icons
-npm install react-table
+    npx create-react-app cyberfront-frontend
+    cd cyberfront-frontend
 
-nom run start
+Install Tailwind CSS
+
+    npm install -D tailwindcss
+    npx tailwindcss init
+
+In tailwind.config.js, add the following:
+
+    /** @type {import('tailwindcss').Config} */
+    module.exports = {
+      content: [
+        "./src/**/*.{js,jsx,ts,tsx}",
+      ],
+      theme: {
+        extend: {},
+      },
+      plugins: [],
+    };
+
+Set Up Tailwind CSS in Index.css
+In src/index.css, include Tailwind CSS:
+
+    @tailwind base;
+    @tailwind components;
+    @tailwind utilities;
+
+Install Dependencies
+Install necessary packages for the project:
+
+    npm install react-scripts@latest react-table react-icons react-router-dom recharts axios
+
+Running the Application
+
+To start the development server, run:
+
+    npm run start
+
+This will launch the Cyberfront frontend in your browser at http://localhost:3000. Any changes made in the code will automatically reload the application. Happy coding! 🚀
