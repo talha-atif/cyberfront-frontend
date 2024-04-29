@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from "react";
+import axios from "axios";
 import RedHeader from "../components/BlueHeader";
 import Chatbot from "../components/Chatbot";
-import axios from "axios";
 import {
   FaHammer,
   FaLockOpen,
@@ -16,28 +16,28 @@ function DefendTool({ icon, title, defence, description, selectedContainer }) {
   const [terminalCommands, setTerminalCommands] = useState([]);
   const [showTerminal, setShowTerminal] = useState(false);
   const terminalRef = useRef(null);
+  const [loadingDefence, setLoadingDefence] = useState(false);
 
   const handleDefence = () => {
     if (selectedContainer) {
       const backendURL = `http://localhost:5000/docker/defence?defenceName=${defence}&containerName=${selectedContainer.name}&imageName=${selectedContainer.image}`;
+      setLoadingDefence(true); // Start loading defence
       axios
         .get(backendURL)
         .then((response) => {
-          // Handle success, sending the response to the terminal
-
           let newText = response.data;
-          // Update the terminalCommands state with the plain text
           setTerminalCommands([newText]);
-          setShowTerminal(true); // Show the terminal
+          setShowTerminal(true);
         })
         .catch((error) => {
-          // Handle error
           console.error("Error initiating defence:", error);
+        })
+        .finally(() => {
+          setLoadingDefence(false); // Stop loading defence
         });
     } else {
-      // Handle the case where no container is selected
       console.error("No container selected for defence");
-      alert("Please select a container to defence");
+      alert("Please select a container to defend");
     }
   };
 
@@ -70,8 +70,9 @@ function DefendTool({ icon, title, defence, description, selectedContainer }) {
         <button
           className="flex flex-col justify-center px-4 py-1.5 my-auto text-sm font-medium leading-5 whitespace-nowrap bg-gray-100 rounded-xl text-neutral-900 max-md:px-5 hover:bg-blue-950 hover:text-white"
           onClick={handleDefence}
+          disabled={loadingDefence}
         >
-          Run
+          {loadingDefence ? "Running..." : "Run"}
         </button>
       </div>
       <div>
@@ -112,7 +113,7 @@ function DefendTool({ icon, title, defence, description, selectedContainer }) {
 function Defend() {
   const [containers, setContainers] = useState([]);
   const [selectedContainer, setSelectedContainer] = useState(null);
-  const [loading, setLoading] = useState(true);
+  const [loadingContainers, setLoadingContainers] = useState(true);
 
   const defenceOptions = [
     {
@@ -126,19 +127,19 @@ function Defend() {
       name: "DoS",
       description:
         "Prevent attackers from launching a Denial of Service attack.",
-      icon: <FaHammer className="text-blue-900" />, // Add icon and styles
+      icon: <FaHammer className="text-blue-900" />,
     },
     {
-      defence: "Privilege-Escalation",
+      defence: "Protect-Hashes",
       name: "Protect Hashes",
       description: "Prevent attackers from gaining access to hashed passwords.",
-      icon: <FaHashtag className="text-blue-900" />, // Add icon and styles
+      icon: <FaHashtag className="text-blue-900" />,
     },
     {
-      defence: "Privilege-Escalation",
+      defence: "Protect-Namespaces",
       name: "Protect Namespaces",
       description: "Prevent attackers from accessing other namespaces.",
-      icon: <FaLockOpen className="text-blue-900" />, // Add icon and styles
+      icon: <FaLockOpen className="text-blue-900" />,
     },
   ];
 
@@ -148,11 +149,11 @@ function Defend() {
       .get("http://localhost:5000/docker/containers")
       .then((response) => {
         setContainers(response.data);
-        setLoading(false); // Set loading to false after data received
+        setLoadingContainers(false); // Set loading to false after data received
       })
       .catch((error) => {
         console.error("Error fetching container data:", error);
-        setLoading(false); // Set loading to false even on error
+        setLoadingContainers(false); // Set loading to false even on error
       });
   }, []); // Empty dependency array ensures useEffect runs only once on mount
 
@@ -175,7 +176,7 @@ function Defend() {
           <h2>Defend</h2>
         </header>
         <div className="flex flex-col items-start p-4">
-          {loading ? (
+          {loadingContainers ? (
             <div className="flex justify-center items-center">
               <FaCircleNotch className="animate-spin h-8 w-8 text-primary-500 text-gray-400" />
             </div>

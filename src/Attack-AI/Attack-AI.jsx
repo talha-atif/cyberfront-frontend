@@ -35,18 +35,24 @@ function RecommendedActions({ suggestions }) {
           <h2 className="text-lg font-bold tracking-tight text-neutral-900">
             Attack Possibility
           </h2>
-          <div className="flex justify-between gap-5 px-4 py-1 w-full bg-white max-w-[960px] max-md:flex-wrap max-md:max-w-full">
-            <div className="flex gap-4 max-md:flex-wrap max-md:max-w-full">
-              <div className="flex flex-col justify-center items-start p-4 bg-gray-100 rounded-lg max-md:pr-5 text-red-800">
-                <FaCrown />
-              </div>
-              <div className="flex flex-col justify-center my-auto leading-[150%] max-md:max-w-full">
-                <div className="text-base font-medium text-neutral-900 max-md:max-w-full">
-                  {suggestions}
+          {suggestions ? (
+            <div className="flex justify-between gap-5 px-4 py-1 w-full bg-white max-w-[960px] max-md:flex-wrap max-md:max-w-full">
+              <div className="flex gap-4 max-md:flex-wrap max-md:max-w-full">
+                <div className="flex flex-col justify-center items-start p-4 bg-gray-100 rounded-lg max-md:pr-5 text-red-800">
+                  <FaCrown />
+                </div>
+                <div className="flex flex-col justify-center my-auto leading-[150%] max-md:max-w-full">
+                  <div className="text-base font-medium text-neutral-900 max-md:max-w-full">
+                    {suggestions}
+                  </div>
                 </div>
               </div>
             </div>
-          </div>
+          ) : (
+            <div className="flex justify-center items-center mt-4">
+              <FaCircleNotch className="animate-spin h-8 w-8 text-primary-500" />
+            </div>
+          )}
         </div>
       )}
     </div>

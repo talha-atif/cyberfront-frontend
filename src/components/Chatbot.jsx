@@ -7,12 +7,30 @@ import {
   MdChat,
 } from "react-icons/md";
 
+const TypingIndicator = ({ isTyping }) => {
+  return isTyping ? (
+    <div className="flex items-center justify-start mb-4">
+      <div className="flex-shrink-0 flex items-start mr-2">
+        <MdSmartToy className="text-blue-800" size={18} />
+      </div>
+      <div className="px-3 py-2 bg-gray-200 text-gray-800 rounded-full flex items-center">
+        <span className="animate-pulse flex items-center h-full">
+          <span className="inline-block w-2 h-2 bg-gray-600 rounded-full mr-1"></span>
+          <span className="inline-block w-2 h-2 bg-gray-600 rounded-full mr-1"></span>
+          <span className="inline-block w-2 h-2 bg-gray-600 rounded-full"></span>
+        </span>
+      </div>
+    </div>
+  ) : null;
+};
+
 const Chatbot = () => {
   const [showChatbot, setShowChatbot] = useState(false);
   const [messages, setMessages] = useState([
     { role: "assistant", content: "Hi there 👋 How can I help you today?" },
   ]);
   const [inputValue, setInputValue] = useState("");
+  const [isTyping, setIsTyping] = useState(false);
   const chatboxRef = useRef(null);
   const textareaRef = useRef(null);
 
@@ -20,6 +38,7 @@ const Chatbot = () => {
     const userMessage = { role: "user", content: inputValue };
     setMessages((prevMessages) => [...prevMessages, userMessage]);
     setInputValue("");
+    setIsTyping(true);
 
     try {
       const response = await fetch("http://localhost:5000/chatbot/chat", {
@@ -47,6 +66,8 @@ const Chatbot = () => {
         content: "Oops! Something went wrong. Please try again.",
       };
       setMessages((prevMessages) => [...prevMessages, errorMessage]);
+    } finally {
+      setIsTyping(false);
     }
   };
 
@@ -122,6 +143,7 @@ const Chatbot = () => {
               )}
             </div>
           ))}
+          <TypingIndicator isTyping={isTyping} />
         </div>
 
         <div className="bg-gray-100 p-4 flex items-center">
